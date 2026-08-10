@@ -145,6 +145,40 @@ db.exec(`
     criado     TEXT NOT NULL DEFAULT (datetime('now'))
   );
 
+  /* ---------------------------------------------------------------- obras --
+     O portfolio. E a prova que falta no funil: quem contrata instalacao quer
+     ver que ja foi feito antes, no porte dele.
+
+     'cliente' e 'local' podem ficar VAZIOS de proposito — boa parte dos
+     clientes de obra nao autoriza divulgar o nome. Sem o nome a obra continua
+     valendo: "comercio de medio porte no centro de Caruaru" prova porte e
+     tipo, que e o que o visitante esta medindo.
+
+     'exemplo' marca a obra semeada por mim, que NAO aconteceu. A tela avisa
+     quando ha exemplo no ar — portfolio e afirmacao de fato, e publicar obra
+     inventada como real e mentir para o cliente do cliente. */
+  CREATE TABLE IF NOT EXISTS obras (
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    slug        TEXT NOT NULL UNIQUE,
+    titulo      TEXT NOT NULL,
+    cliente     TEXT NOT NULL DEFAULT '',
+    local       TEXT NOT NULL DEFAULT '',
+    ano         INTEGER,
+    porte       TEXT NOT NULL DEFAULT '',
+    duracao     TEXT NOT NULL DEFAULT '',
+    servico_id  INTEGER REFERENCES servicos(id),
+    resumo      TEXT NOT NULL DEFAULT '',
+    desafio     TEXT NOT NULL DEFAULT '',
+    solucao     TEXT NOT NULL DEFAULT '',
+    resultado   TEXT NOT NULL DEFAULT '',
+    escopo      TEXT NOT NULL DEFAULT '',
+    foto        TEXT NOT NULL DEFAULT '',
+    exemplo     INTEGER NOT NULL DEFAULT 0,
+    ordem       INTEGER NOT NULL DEFAULT 0,
+    ativo       INTEGER NOT NULL DEFAULT 1
+  );
+  CREATE INDEX IF NOT EXISTS ix_obras_servico ON obras(servico_id, ativo);
+
   /* ---------------------------------------------------------------- blog ---
      'publicado_em' nulo = rascunho. Um campo em vez de dois (rascunho +
      data) porque dois campos permitem o estado impossível "publicado sem

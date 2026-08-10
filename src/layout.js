@@ -79,6 +79,7 @@ function icone(nome, tamanho = 24) {
 const MENU = [
   { href: "/", rotulo: "Início" },
   { href: "/servicos/", rotulo: "Serviços" },
+  { href: "/obras/", rotulo: "Obras" },
   { href: "/loja/", rotulo: "Loja" },
   { href: "/feed/", rotulo: "Feed" },
   { href: "/empresa/", rotulo: "A empresa" },

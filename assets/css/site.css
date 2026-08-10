@@ -486,3 +486,50 @@ a.canal__valor:hover { text-decoration: underline; }
   width: 100%; height: auto; border-radius: var(--r-lg);
   margin-bottom: var(--e5); background: var(--gelo);
 }
+
+/* ============================================================== obras ==== */
+/* O cartão do portfólio. Foto sempre em cima porque é ela que faz parar o
+   olho numa grade — e porque a obra sem foto continua funcionando: o bloco de
+   texto simplesmente sobe. */
+.obra { padding: 0; overflow: hidden; display: flex; flex-direction: column; }
+.obra__foto { position: relative; display: block; aspect-ratio: 4 / 3; background: var(--gelo); }
+.obra__foto img { width: 100%; height: 100%; object-fit: cover; }
+/* A etiqueta da frente de serviço fica SOBRE a foto, no alto: é o primeiro
+   filtro mental de quem procura ("isso é elétrica ou hidráulica?"). */
+.obra__marca {
+  position: absolute; top: var(--e3); left: var(--e3);
+  background: rgba(36,27,99,.92); color: var(--branco);
+  padding: .25rem .6rem; border-radius: 999px;
+  font: 600 var(--t-mini)/1.5 var(--f-corpo); letter-spacing: .02em;
+}
+.obra__corpo { display: block; padding: var(--e5); flex: 1; }
+.obra__meta {
+  display: block; font-size: var(--t-mini); color: var(--cinza);
+  text-transform: uppercase; letter-spacing: .08em; margin-bottom: var(--e2);
+}
+.obra h3 { font-size: 1.1rem; color: var(--marinho); margin-bottom: var(--e2); }
+.obra p { font-size: .95rem; color: var(--cinza); }
+.obra__porte {
+  display: inline-flex; align-items: center; gap: .4rem; margin-top: var(--e3);
+  font-size: var(--t-peq); color: var(--grafite);
+}
+.obra__porte svg { flex: none; color: var(--laranja-escuro); }
+
+/* Página da obra: problema → o que foi feito → resultado, na ordem em que a
+   pergunta chega na visita. */
+.obra__grade { display: grid; gap: var(--e7); align-items: start; }
+@media (min-width: 940px) { .obra__grade { grid-template-columns: 1.3fr .7fr; } }
+.obra__bloco + .obra__bloco { margin-top: var(--e6); }
+.obra__bloco h2 { font-size: 1.25rem; color: var(--marinho); margin-bottom: var(--e3); }
+.obra__bloco p { max-width: var(--leitura); }
+.dados--ficha { margin-top: 0; }
+
+/* AVISO DE ATENÇÃO — usado quando há obra de exemplo publicada. Âmbar e não
+   cinza: ele precisa ser lido, não decorado. É a diferença entre o cliente
+   descobrir que o portfólio é de mentira agora ou depois de mandar o link. */
+.aviso--atencao {
+  background: #FFF7EC; border: 1px solid #F6D8A8; color: #7A4A08;
+  align-items: flex-start; margin-top: 0; margin-bottom: var(--e6);
+}
+.aviso--atencao svg { color: #C2410C; }
+.aviso--atencao strong { color: #7A4A08; }

@@ -21,6 +21,37 @@ const qServicoPorSlug = db.prepare("SELECT * FROM servicos WHERE slug = ? AND at
 const servicosAtivos = () => qServicosAtivos.all();
 const servicoPorSlug = (slug) => qServicoPorSlug.get(slug);
 
+/* ----------------------------------------------------------------- obras -- */
+/* O `LEFT JOIN` e não `JOIN`: uma obra pode não estar amarrada a nenhuma frente
+   de serviço (uma reforma que misturou tudo), e com `JOIN` ela sumiria do
+   portfólio sem ninguém entender por quê. */
+const qObras = db.prepare(`
+  SELECT o.*, s.nome AS servico, s.slug AS servico_slug
+  FROM obras o LEFT JOIN servicos s ON s.id = o.servico_id
+  WHERE o.ativo = 1 AND (@servico IS NULL OR s.slug = @servico)
+  ORDER BY o.ordem, o.ano DESC, o.id DESC
+  LIMIT @limite`);
+
+const qObraPorSlug = db.prepare(`
+  SELECT o.*, s.nome AS servico, s.slug AS servico_slug
+  FROM obras o LEFT JOIN servicos s ON s.id = o.servico_id
+  WHERE o.slug = ? AND o.ativo = 1`);
+
+/* Só as frentes que TÊM obra publicada viram filtro. Um filtro que devolve
+   lista vazia é um beco: a pessoa clica, não vê nada e conclui que o site está
+   quebrado — não que aquela frente ainda não tem obra cadastrada. */
+const qServicosComObra = db.prepare(`
+  SELECT s.slug, s.nome, COUNT(o.id) AS quantas
+  FROM servicos s JOIN obras o ON o.servico_id = s.id AND o.ativo = 1
+  WHERE s.ativo = 1 GROUP BY s.id ORDER BY s.ordem`);
+
+const qTemExemplo = db.prepare("SELECT COUNT(*) AS n FROM obras WHERE ativo = 1 AND exemplo = 1");
+
+const obras = ({ servico = null, limite = 60 } = {}) => qObras.all({ servico, limite });
+const obraPorSlug = (slug) => qObraPorSlug.get(slug);
+const servicosComObra = () => qServicosComObra.all();
+const temObraDeExemplo = () => qTemExemplo.get().n > 0;
+
 /* ------------------------------------------------------------------ loja -- */
 const qCategorias = db.prepare(`
   SELECT c.*, (SELECT COUNT(*) FROM produtos p WHERE p.categoria_id = c.id AND p.ativo = 1) AS quantos
@@ -174,6 +205,7 @@ function buscar(termo) {
 
 module.exports = {
   servicosAtivos, servicoPorSlug,
+  obras, obraPorSlug, servicosComObra, temObraDeExemplo,
   categorias, produtos, produtoPorSlug, carrinhoResolvido,
   criarPedido, pedidoPorProtocolo,
   criarOrcamento,

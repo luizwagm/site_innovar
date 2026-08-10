@@ -44,6 +44,9 @@ function home() {
   const servicos = repo.servicosAtivos();
   const destaques = repo.produtos({ porPagina: 4 }).itens;
   const materias = repo.materias(3);
+  /* A prova entra ANTES do "como funciona": quem ainda está decidindo quer ver
+     que já foi feito, e só depois se interessa pelo processo. */
+  const obrasNaHome = repo.obras({ limite: 3 });
 
   const corpo = `
 <section class="heroi">
@@ -75,8 +78,14 @@ ${secao({
     corpo: `<div class="grade grade--4">${servicos.map(cartaoServico).join("")}</div>`,
   })}
 
+${obrasNaHome.length ? secao({
+    olho: texto("OBRAS_HOME_OLHO"), titulo: texto("OBRAS_HOME_TITULO"), fundo: "secao--gelo",
+    corpo: `<div class="grade grade--3">${obrasNaHome.map(cartaoObra).join("")}</div>
+      <p class="secao__pe">${botao("/obras/", "Ver todas as obras", "contorno")}</p>`,
+  }) : ""}
+
 ${secao({
-    olho: texto("HOME_PASSOS_OLHO"), titulo: texto("HOME_PASSOS_TITULO"), fundo: "secao--gelo",
+    olho: texto("HOME_PASSOS_OLHO"), titulo: texto("HOME_PASSOS_TITULO"),
     corpo: `<div class="passos">${[1, 2, 3, 4].map((n) => `<div class="passo" data-revela>
       <h3>${esc(texto(`HOME_PASSO${n}_T`))}</h3>
       <p>${esc(texto(`HOME_PASSO${n}_D`))}</p></div>`).join("")}</div>`,
@@ -174,7 +183,7 @@ function servico(s) {
       <div class="lateral__acao">${botao(`/orcamento/?servico=${encodeURIComponent(s.slug)}`, "Pedir orçamento deste serviço", "primario")}</div>
     </aside>
   </div>
-</section>` + outrosServicos(s.slug) + chamadaFinal();
+</section>` + obrasDoServico(s) + outrosServicos(s.slug) + chamadaFinal();
 
   return pagina({
     titulo: `${s.nome} em Caruaru — ${texto("EMPRESA_NOME")}`,
@@ -190,11 +199,153 @@ function servico(s) {
   });
 }
 
+/* As obras DAQUELA frente, dentro da página do serviço. É onde a prova pesa
+   mais: a pessoa acabou de ler o que está incluído e a pergunta seguinte é
+   "vocês já fizeram isso?". Mandar ela ao portfólio geral para descobrir
+   sozinha é perder o momento. */
+const obrasDoServico = (s) => {
+  const lista = repo.obras({ servico: s.slug, limite: 3 });
+  if (!lista.length) return "";
+  return secao({
+    olho: "Prova", titulo: `Obras de ${s.nome.toLowerCase()}`, fundo: "secao--gelo",
+    corpo: `<div class="grade grade--3">${lista.map(cartaoObra).join("")}</div>
+      <p class="secao__pe">${botao(`/obras/?servico=${encodeURIComponent(s.slug)}`, "Ver todas desta frente", "contorno")}</p>`,
+  });
+};
+
 const outrosServicos = (slugAtual) => {
   const outros = repo.servicosAtivos().filter((s) => s.slug !== slugAtual);
   if (!outros.length) return "";
   return secao({ titulo: "Outras frentes", fundo: "secao--gelo",
     corpo: `<div class="grade grade--3">${outros.map(cartaoServico).join("")}</div>` });
+};
+
+/* ================================================================ obras === */
+/* O cartão do portfólio mostra PORTE E LOCAL antes do texto. É o que o
+   responsável de obra usa para decidir se aquilo se parece com o caso dele —
+   e é a pergunta que ele faria em dez segundos de conversa. */
+const cartaoObra = (o) => `
+<a class="card card--link obra" href="/obras/${esc(o.slug)}/" data-revela>
+  ${o.foto ? `<span class="obra__foto"><img src="${esc(o.foto)}" alt="" width="480" height="360" loading="lazy">
+    ${o.servico ? `<span class="obra__marca">${esc(o.servico)}</span>` : ""}</span>` : ""}
+  <span class="obra__corpo">
+    <span class="obra__meta">${[o.local, o.ano].filter(Boolean).map(esc).join(" · ")}</span>
+    <h3>${esc(o.titulo)}</h3>
+    <p>${esc(o.resumo)}</p>
+    ${o.porte ? `<span class="obra__porte">${icone("doc", 15)} ${esc(o.porte)}</span>` : ""}
+    <span class="serv__link">Ver a obra ${icone("seta", 16)}</span>
+  </span>
+</a>`;
+
+/* O aviso de exemplo aparece SEMPRE que houver obra semeada no ar — não é
+   discreto de propósito. Portfólio é afirmação de fato: obra que não aconteceu
+   publicada como real é uma mentira contada ao cliente do cliente, e o custo
+   dela chega quando alguém pede a referência. */
+const avisoExemplo = () => repo.temObraDeExemplo() ? `
+<div class="aviso aviso--atencao" role="status">
+  ${icone("nao", 18)}
+  <span><strong>Estas obras são exemplos, não trabalhos executados.</strong>
+  Foram cadastradas para você ver a tela funcionando. Troque por obras reais no
+  painel antes de divulgar o site — nenhum nome de cliente foi inventado, mas os
+  casos não aconteceram.</span>
+</div>` : "";
+
+function obras(servicoEscolhido = null) {
+  const lista = repo.obras({ servico: servicoEscolhido });
+  const frentes = repo.servicosComObra();
+  const atual = frentes.find((f) => f.slug === servicoEscolhido);
+
+  const filtro = (slug, rotulo, quantas) => {
+    const aqui = (slug || null) === servicoEscolhido;
+    return `<a class="chip${aqui ? " chip--ativo" : ""}" href="/obras/${slug ? `?servico=${encodeURIComponent(slug)}` : ""}"
+      ${aqui ? 'aria-current="true"' : ""}>${esc(rotulo)}${quantas != null ? ` <span>${quantas}</span>` : ""}</a>`;
+  };
+
+  const corpo = capa({
+    olho: "Portfólio",
+    titulo: atual ? atual.nome : texto("OBRAS_TITULO"),
+    texto: atual ? "" : texto("OBRAS_TEXTO"),
+    migalha: atual ? [{ rotulo: "Obras", href: "/obras/" }, { rotulo: atual.nome }] : [{ rotulo: "Obras" }],
+  }) + `
+<section class="secao">
+  <div class="container">
+    ${avisoExemplo()}
+    ${frentes.length > 1 ? `<nav class="chips" aria-label="Filtrar por serviço">
+      ${filtro("", "Todas", repo.obras().length)}
+      ${frentes.map((f) => filtro(f.slug, f.nome, f.quantas)).join("")}
+    </nav>` : ""}
+
+    ${lista.length
+      ? `<div class="grade grade--3">${lista.map(cartaoObra).join("")}</div>`
+      : `<p class="vazio">${esc(texto("OBRAS_VAZIO"))}</p>`}
+  </div>
+</section>` + chamadaFinal();
+
+  return pagina({
+    titulo: `${texto("OBRAS_TITULO")} — ${texto("EMPRESA_NOME")}`,
+    descricao: texto("OBRAS_TEXTO"),
+    url: "/obras/", corpo,
+  });
+}
+
+function obra(o) {
+  const ficha = [
+    ["Local", o.local], ["Ano", o.ano], ["Porte", o.porte],
+    ["Duração", o.duracao], ["Frente", o.servico], ["Cliente", o.cliente],
+  ].filter(([, v]) => v);
+
+  /* Desafio → solução → resultado, nesta ordem, porque é a ordem em que a
+     pergunta chega: "o que estava acontecendo?", "o que vocês fizeram?", "e
+     resolveu?". Começar pela solução responde algo que ninguém perguntou. */
+  const bloco = (titulo, txt) => txt ? `<div class="obra__bloco" data-revela>
+    <h2>${esc(titulo)}</h2><p>${esc(txt)}</p></div>` : "";
+
+  const corpo = capa({
+    olho: o.servico || "Obra", titulo: o.titulo, texto: o.resumo,
+    migalha: [{ rotulo: "Obras", href: "/obras/" }, { rotulo: o.titulo }],
+  }) + `
+<section class="secao">
+  <div class="container obra__grade">
+    <div>
+      ${o.exemplo ? avisoExemplo() : ""}
+      ${o.foto ? `<img class="prosa__foto" src="${esc(o.foto)}" alt="${esc(o.titulo)}"
+        width="1200" height="900" fetchpriority="high">` : ""}
+      ${bloco("O problema", o.desafio)}
+      ${bloco("O que foi feito", o.solucao)}
+      ${bloco("O resultado", o.resultado)}
+    </div>
+
+    <aside class="lateral">
+      <div class="card" data-revela>
+        <h3 class="lateral__titulo">${icone("doc", 18)} A obra</h3>
+        <dl class="dados dados--ficha">
+          ${ficha.map(([r, v]) => `<dt>${esc(r)}</dt><dd>${esc(v)}</dd>`).join("")}
+        </dl>
+      </div>
+      ${o.escopo ? `<div class="card" data-revela>
+        <h3 class="lateral__titulo">${icone("ok", 18)} O que entrou</h3>
+        ${listaDeLinhas(o.escopo, "lista lista--ok")}
+      </div>` : ""}
+      <div class="lateral__acao">
+        ${botao(`/orcamento/${o.servico_slug ? `?servico=${encodeURIComponent(o.servico_slug)}` : ""}`,
+          "Quero algo parecido", "primario")}
+        ${o.servico_slug ? botao(`/servicos/${esc(o.servico_slug)}/`, "Ver o serviço", "contorno") : ""}
+      </div>
+    </aside>
+  </div>
+</section>` + outrasObras(o.slug) + chamadaFinal();
+
+  return pagina({
+    titulo: `${o.titulo} — ${texto("EMPRESA_NOME")}`,
+    descricao: o.resumo, url: `/obras/${o.slug}/`, corpo,
+  });
+}
+
+const outrasObras = (slugAtual) => {
+  const outras = repo.obras({ limite: 4 }).filter((o) => o.slug !== slugAtual).slice(0, 3);
+  if (!outras.length) return "";
+  return secao({ titulo: "Outras obras", fundo: "secao--gelo",
+    corpo: `<div class="grade grade--3">${outras.map(cartaoObra).join("")}</div>` });
 };
 
 /* ============================================================== empresa === */
@@ -486,7 +637,7 @@ function cartaoProduto(p) {
 }
 
 module.exports = {
-  home, servicos, servico, empresa, contato, orcamento, orcamentoEnviado,
+  home, servicos, servico, obras, obra, empresa, contato, orcamento, orcamentoEnviado,
   feed, materia, busca, privacidade, naoEncontrado,
   cartaoProduto, listaDeLinhas, dataLonga, chamadaFinal,
 };

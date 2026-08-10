@@ -115,6 +115,106 @@ const PRODUTOS = [
     "Folha de lixa d'água para preparo de superfície antes da solda."],
 ];
 
+/* ==========================================================================
+   OBRAS — o portfólio
+
+   ESTES SEIS REGISTROS SÃO EXEMPLO, e vão para o banco com `exemplo = 1`. A
+   distinção não é burocracia: texto de seção genérico é só um rascunho de
+   layout, mas obra é AFIRMAÇÃO DE FATO. Publicar "instalamos 42 pontos no
+   supermercado tal em 2025" quando isso não aconteceu é mentir para o cliente
+   do cliente — e é o tipo de coisa que aparece quando alguém pede a referência.
+
+   Por isso:
+     · nenhum nome de cliente é inventado (o campo fica vazio);
+     · os números descrevem um caso plausível, não um caso ocorrido;
+     · a tela avisa, para quem administra, que há exemplo publicado;
+     · trocar por obra real é apagar o aviso — o campo `exemplo` vai a zero.
+
+   O formato de cada obra segue o que um responsável de obra procura, nesta
+   ordem: qual era o problema, o que foi feito, o que mudou. É o mesmo que ele
+   vai perguntar na visita.
+   ========================================================================== */
+const OBRAS = [
+  {
+    slug: "adequacao-eletrica-comercio-centro",
+    titulo: "Adequação elétrica de comércio no centro",
+    local: "Caruaru — PE", ano: 2026, porte: "420 m² de área de vendas",
+    duracao: "6 dias úteis, sem fechar a loja",
+    servico: "eletrica",
+    resumo: "Quadro no limite, disjuntor desarmando toda tarde e circuitos sem identificação.",
+    desafio: "A carga instalada dobrou em cinco anos — dois aparelhos de ar novos, câmara fria e um forno elétrico — e o quadro continuava o mesmo de 2018. O disjuntor geral desarmava sempre no fim da tarde, e a solução que vinham usando era trocar o disjuntor por um maior, sem trocar o cabo.",
+    solucao: "Levantamento da carga real, entrada redimensionada, quadro novo com DR nas áreas molhadas e circuitos separados para os equipamentos de maior consumo. Cada circuito foi identificado no quadro.",
+    resultado: "Nenhum desarme desde a entrega. O comércio funcionou todos os dias da obra — o trabalho foi feito por etapas, com o corte combinado fora do horário de pico.",
+    escopo: "Levantamento de carga instalada\nEntrada de energia redimensionada\nQuadro de distribuição novo, com DR\nCircuitos dedicados para ar-condicionado, câmara fria e forno\nAterramento e proteção contra surto\nIdentificação de todos os circuitos\nART do serviço",
+    foto: "serv-eletrica.jpg", ordem: 1,
+  },
+  {
+    slug: "prevencao-incendio-galpao",
+    titulo: "Prevenção contra incêndio para vistoria em galpão",
+    local: "Agreste pernambucano", ano: 2026, porte: "1.100 m² de galpão",
+    duracao: "18 dias, do levantamento à vistoria",
+    servico: "prevencao-incendio",
+    resumo: "Alvará vencendo em um mês e divergência entre o projeto aprovado e o que estava instalado.",
+    desafio: "O layout tinha mudado depois do projeto aprovado — um mezanino novo alterou as rotas de fuga — e ninguém havia atualizado a documentação. Havia mais extintores do que o projeto previa, e ainda assim o conjunto estava irregular: instalar a mais não resolve, diverge.",
+    solucao: "Comparação item a item entre o projeto aprovado e o instalado, lista do que faltava apresentada antes de qualquer compra, e execução do que foi aprovado pelo cliente. Acompanhamento no dia da vistoria.",
+    resultado: "Vistoria aprovada na primeira visita do Corpo de Bombeiros.",
+    escopo: "Levantamento contra o projeto aprovado\nHidrantes, mangueiras e abrigos\nExtintores na classe e na validade corretas\nSinalização de emergência e rotas de fuga\nIluminação de emergência com autonomia testada\nAcompanhamento na vistoria",
+    foto: "serv-incendio.jpg", ordem: 2,
+  },
+  {
+    slug: "hidraulica-restaurante",
+    titulo: "Hidráulica e gás de cozinha industrial",
+    local: "Caruaru — PE", ano: 2025, porte: "cozinha de 90 m²",
+    duracao: "9 dias úteis",
+    servico: "hidraulica-gas",
+    resumo: "Instalação completa de água, esgoto e gás para uma cozinha que ia abrir em três semanas.",
+    desafio: "O ponto comercial nunca tinha sido cozinha: a rede existente era de um escritório, com um único ponto de água e esgoto de banheiro. O prazo era o da inauguração, já anunciada.",
+    solucao: "Ramais novos de água fria e quente, esgoto com caixa de gordura dimensionada para o volume da cozinha, e instalação de gás GLP com teste de estanqueidade e laudo. Execução em paralelo com a marcenaria, com as etapas combinadas dia a dia.",
+    resultado: "Entregue quatro dias antes da inauguração, com laudo de estanqueidade em mãos para o seguro e para a vistoria.",
+    escopo: "Ramais de água fria e quente\nEsgoto e caixa de gordura dimensionada\nInstalação de gás GLP\nTeste de estanqueidade com laudo\nPontos para os equipamentos da cozinha",
+    foto: "serv-hidraulica.jpg", ordem: 3,
+  },
+  {
+    slug: "manutencao-predial-condominio",
+    titulo: "Contrato de manutenção predial em condomínio",
+    local: "Caruaru — PE", ano: 2025, porte: "48 unidades, 2 torres",
+    duracao: "contrato mensal, em andamento",
+    servico: "manutencao-predial",
+    resumo: "Troca do modelo de chamar alguém às pressas para ronda mensal com relatório.",
+    desafio: "O condomínio gastava por emergência: bomba que parava no fim de semana, iluminação de emergência descoberta descarregada só na hora de precisar, extintores vencendo sem controle. Cada chamado saía mais caro por ser urgência.",
+    solucao: "Ronda mensal cobrindo elétrica, hidráulica e prevenção contra incêndio, com relatório do que foi conferido, do que foi corrigido na hora e do que vai precisar de atenção — para o síndico levar à assembleia com antecedência.",
+    resultado: "As trocas passaram a entrar no orçamento anual em vez de aparecer como urgência.",
+    escopo: "Ronda mensal das três frentes\nRelatório com registro fotográfico\nPequenos reparos inclusos na visita\nControle de validade de extintores e recargas\nAtendimento prioritário fora da ronda",
+    foto: "serv-manutencao.jpg", ordem: 4,
+  },
+  {
+    slug: "localizacao-vazamento-predio",
+    titulo: "Localização de vazamento sem quebrar o piso",
+    local: "Caruaru — PE", ano: 2025, porte: "prédio comercial de 3 pavimentos",
+    duracao: "2 dias, do diagnóstico ao reparo",
+    servico: "hidraulica-gas",
+    resumo: "Conta de água três vezes maior, sem nenhuma poça à vista.",
+    desafio: "A perda estava no trecho embutido, e a proposta que o cliente tinha recebido era abrir o piso do corredor inteiro por tentativa — obra de uma semana, com o prédio parcialmente interditado.",
+    solucao: "Isolamento por trechos com pressurização e escuta para localizar o ponto exato antes de abrir. Um recorte de menos de meio metro quadrado, reparo e recomposição.",
+    resultado: "A conta voltou ao patamar anterior no mês seguinte. O corredor ficou interditado por meio dia.",
+    escopo: "Teste do hidrômetro e isolamento por trechos\nLocalização do ponto de perda antes da quebra\nReparo do trecho e recomposição do piso\nConferência da pressão após o reparo",
+    foto: "cat-tubos.jpg", ordem: 5,
+  },
+  {
+    slug: "reforma-material-hidraulico",
+    titulo: "Fornecimento de material para reforma predial",
+    local: "Caruaru — PE", ano: 2026, porte: "obra de 260 m²",
+    duracao: "entregas semanais durante 7 semanas",
+    servico: "hidraulica-gas",
+    resumo: "Material hidráulico da reforma inteira, entregue no ritmo da obra.",
+    desafio: "A obra parava esperando material que o fornecedor entregava em lote único, sem espaço para armazenar — e o que sobrava de uma etapa não servia para a seguinte.",
+    solucao: "Lista de material por etapa, retirada e entrega combinadas semana a semana, com a loja própria absorvendo o que a obra precisou fora do previsto.",
+    resultado: "Nenhuma parada por falta de material nas sete semanas.",
+    escopo: "Levantamento de material por etapa\nTubos, conexões, registros e metais\nEntrega semanal combinada\nReposição no mesmo dia do pedido extra",
+    foto: "cat-conexoes.jpg", ordem: 6,
+  },
+];
+
 /* ------------------------------------------------------------------ feed --- */
 const MATERIAS = [
   {
@@ -347,6 +447,19 @@ function semear() {
     const insMateria = db.prepare(`INSERT OR IGNORE INTO materias
       (slug, titulo, resumo, corpo, publicado_em) VALUES (@slug, @titulo, @resumo, @corpo, @publicado_em)`);
     for (const m of MATERIAS) insMateria.run(m);
+
+    /* As obras entram com `exemplo = 1` e a foto já resolvida — elas são as
+       únicas que trazem o caminho da imagem no próprio registro, porque cada
+       obra tem a sua e não há categoria de onde herdar. */
+    const idServico = db.prepare("SELECT id FROM servicos WHERE slug = ?");
+    const insObra = db.prepare(`INSERT OR IGNORE INTO obras
+      (slug, titulo, cliente, local, ano, porte, duracao, servico_id, resumo,
+       desafio, solucao, resultado, escopo, foto, exemplo, ordem)
+      VALUES (@slug, @titulo, '', @local, @ano, @porte, @duracao, @servico_id, @resumo,
+       @desafio, @solucao, @resultado, @escopo, @foto, 1, @ordem)`);
+    for (const o of OBRAS) {
+      insObra.run({ ...o, servico_id: idServico.get(o.servico)?.id ?? null, foto: BANCO + o.foto });
+    }
 
     ligarFotos();
   });

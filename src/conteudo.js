@@ -93,6 +93,17 @@ const CAMPOS = [
   { chave: "SERV_TEXTO", painel: "Serviços", rotulo: "Texto de abertura", tipo: "area",
     valor: "Instalação, manutenção e adequação para quem tem um imóvel comercial funcionando — com escopo por escrito e a documentação que a vistoria pede." },
 
+  /* ----------------------------------------------------------------- obras - */
+  { chave: "OBRAS_TITULO", painel: "Obras", rotulo: "Título da página", tipo: "texto",
+    valor: "Obras entregues" },
+  { chave: "OBRAS_TEXTO", painel: "Obras", rotulo: "Texto de abertura", tipo: "area",
+    valor: "Cada obra com o problema que existia, o que foi feito e o que mudou depois. Onde o cliente autorizou, o nome está lá; onde não autorizou, o porte e o tipo de imóvel dizem o que você precisa saber." },
+  { chave: "OBRAS_HOME_OLHO", painel: "Início", rotulo: "Obras — etiqueta", tipo: "texto", valor: "Obras entregues" },
+  { chave: "OBRAS_HOME_TITULO", painel: "Início", rotulo: "Obras — título", tipo: "texto",
+    valor: "Já foi feito antes, no porte do seu" },
+  { chave: "OBRAS_VAZIO", painel: "Obras", rotulo: "Texto quando não há obra cadastrada", tipo: "area",
+    valor: "Ainda não publicamos obras aqui. Peça um orçamento e a gente mostra trabalhos parecidos com o seu na visita." },
+
   /* ------------------------------------------------------------------ loja - */
   { chave: "LOJA_TITULO", painel: "Loja", rotulo: "Título da página", tipo: "texto", valor: "Material hidráulico" },
   { chave: "LOJA_TEXTO", painel: "Loja", rotulo: "Texto de abertura", tipo: "area",

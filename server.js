@@ -277,6 +277,7 @@ function rotearGet(req, res, caminho, url) {
 
   if (caminho === "/") return responder(res, site.home());
   if (caminho === "/servicos/") return responder(res, site.servicos());
+  if (caminho === "/obras/") return responder(res, site.obras(url.searchParams.get("servico") || null));
   if (caminho === "/empresa/") return responder(res, site.empresa());
   if (caminho === "/contato/") return responder(res, site.contato());
   if (caminho === "/privacidade/") return responder(res, site.privacidade());
@@ -301,6 +302,10 @@ function rotearGet(req, res, caminho, url) {
   if (partes[0] === "feed" && partes.length === 2) {
     const m = repo.materiaPorSlug(partes[1]);
     return m ? responder(res, site.materia(m)) : quatroCemQuatro(res);
+  }
+  if (partes[0] === "obras" && partes.length === 2) {
+    const o = repo.obraPorSlug(partes[1]);
+    return o ? responder(res, site.obra(o)) : quatroCemQuatro(res);
   }
   if (partes[0] === "produto" && partes.length === 2) {
     const p = repo.produtoPorSlug(partes[1]);
@@ -382,9 +387,11 @@ function sitemap() {
   const hoje = new Date().toISOString().slice(0, 10);
   const urls = [
     ["/", "1.0", "weekly"], ["/servicos/", "0.9", "monthly"], ["/loja/", "0.9", "weekly"],
+    ["/obras/", "0.8", "monthly"],
     ["/empresa/", "0.6", "yearly"], ["/contato/", "0.7", "yearly"],
     ["/orcamento/", "0.8", "monthly"], ["/feed/", "0.7", "weekly"], ["/privacidade/", "0.2", "yearly"],
     ...repo.servicosAtivos().map((s) => [`/servicos/${s.slug}/`, "0.8", "monthly"]),
+    ...repo.obras().map((o) => [`/obras/${o.slug}/`, "0.6", "monthly"]),
     ...repo.categorias().map((c) => [`/loja/?categoria=${c.slug}`, "0.6", "weekly"]),
     ...repo.produtos({ porPagina: 1000 }).itens.map((p) => [`/produto/${p.slug}/`, "0.6", "weekly"]),
     ...repo.materias(200).map((m) => [`/feed/${m.slug}/`, "0.6", "monthly"]),
@@ -422,6 +429,9 @@ Também vende material hidráulico pela loja do site, com retirada em Caruaru.
 
 ## Serviços
 ${repo.servicosAtivos().map((s) => `- [${s.nome}](${SITE}/servicos/${s.slug}/): ${s.resumo}`).join("\n")}
+
+## Obras entregues
+${repo.obras({ limite: 30 }).map((o) => `- [${o.titulo}](${SITE}/obras/${o.slug}/): ${o.resumo}`).join("\n")}
 
 ## Loja
 - [Material hidráulico](${SITE}/loja/): tubos, conexões, registros, metais, caixas e vedação.

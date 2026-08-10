@@ -1,6 +1,6 @@
 {
   "name": "innovar-engenharia",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "private": true,
   "description": "Site, loja e painel da INNOVAR Engenharia e Equipamentos — Caruaru-PE",
   "main": "server.js",
