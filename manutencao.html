@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Em manutenção — INNOVAR Engenharia e Equipamentos</title>
+<meta name="robots" content="noindex">
+
+<!-- ==========================================================================
+     ESTA PÁGINA NÃO DEPENDE DE NADA. Estilo embutido, sem fonte de fora, sem
+     JavaScript, sem imagem externa: ela é servida pelo nginx justamente quando
+     a aplicação NÃO está de pé, e um arquivo que precisa de outro arquivo é um
+     arquivo que também vai falhar nessa hora.
+
+     O símbolo é SVG em linha pelo mesmo motivo — `/assets/img/simbolo.svg`
+     seria servido pelo nginx, sim, mas depende de o caminho estar montado, e
+     aqui a regra é não depender.
+     ====================================================================== */ -->
+<style>
+  :root { --marinho:#241B63; --marinho-2:#1A1449; --laranja:#F0561F; --ambar:#F89A1C; }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    min-height: 100dvh; display: grid; place-items: center; padding: 2rem;
+    background: linear-gradient(160deg, var(--marinho), var(--marinho-2));
+    color: #fff; text-align: center;
+    font: 400 1rem/1.6 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .caixa { max-width: 34rem; }
+  .simbolo { width: 64px; height: 64px; margin: 0 auto 1.75rem; display: block; }
+  h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); line-height: 1.15; margin-bottom: 1rem; letter-spacing: -.02em; }
+  p { opacity: .86; }
+  p + p { margin-top: .85rem; }
+  .marca { font-weight: 700; letter-spacing: .02em; }
+  .nn { color: var(--ambar); }
+  .rodape { margin-top: 2.5rem; font-size: .85rem; opacity: .6; }
+</style>
+</head>
+<body>
+  <div class="caixa">
+    <svg class="simbolo" viewBox="0 0 64 64" role="img" aria-label="INNOVAR">
+      <rect width="64" height="64" rx="12" fill="#2E2478"/>
+      <path d="M17 47 L31 17 L41 17 L27 47 Z" fill="#F89A1C"/>
+      <path d="M33 47 L47 17 L57 17 L43 47 Z" fill="#F0561F"/>
+    </svg>
+
+    <h1>Estamos ajustando o site</h1>
+    <p>Volta em alguns minutos. Se for urgência de elétrica ou vazamento,
+       fale com a gente pelo telefone de sempre.</p>
+    <p class="marca">I<span class="nn">NN</span>OVAR Engenharia e Equipamentos</p>
+
+    <p class="rodape">Caruaru e Agreste pernambucano</p>
+  </div>
+</body>
+</html>

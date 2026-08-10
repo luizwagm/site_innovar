@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="INNOVAR">
+  <!-- ========================================================================
+       O SÍMBOLO — as duas barras diagonais do NN
+
+       Redução do logo ao que sobrevive a 16px. A palavra inteira, não: a 16px
+       "INNOVAR Engenharia e Equipamentos" vira um borrão cinza, e um favicon
+       ilegível é pior que nenhum — ocupa o lugar do que identificaria a aba.
+
+       As barras herdam o ÂNGULO e as duas cores do logo. O ângulo não é 45°
+       nem 30°: é o do desenho original (≈115° medido do eixo horizontal, o
+       mesmo do gradiente da marca). Arredondar para um ângulo "bonito" faria o
+       símbolo brigar com o letreiro sempre que os dois aparecessem juntos.
+
+       Fundo incluído no arquivo porque este símbolo é usado como favicon e
+       ícone do aplicativo, onde não há superfície por baixo — sem ele, a marca
+       flutuaria sobre o que o sistema operacional resolvesse pôr atrás.
+       ==================================================================== -->
+  <rect width="64" height="64" rx="12" fill="#241B63"/>
+  <!-- barra clara (âmbar) — a da esquerda, como no logo -->
+  <path d="M17 47 L31 17 L41 17 L27 47 Z" fill="#F89A1C"/>
+  <!-- barra escura (laranja) — a da direita -->
+  <path d="M33 47 L47 17 L57 17 L43 47 Z" fill="#F0561F"/>
+</svg>

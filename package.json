@@ -1,0 +1,16 @@
+{
+  "name": "innovar-engenharia",
+  "version": "0.6.0",
+  "private": true,
+  "description": "Site, loja e painel da INNOVAR Engenharia e Equipamentos — Caruaru-PE",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "imagens": "node ferramentas/gerar-imagens.cjs",
+    "logo": "node ferramentas/recortar-logo.cjs",
+    "fotos": "node ferramentas/buscar-imagens.cjs"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.5.0"
+  }
+}

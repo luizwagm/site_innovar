@@ -1,0 +1,64 @@
+[Unit]
+# ==========================================================================
+#  INNOVAR — unidade do systemd
+#
+#  Instalar:
+#      sudo cp nginx/innovar.service /etc/systemd/system/
+#      sudo systemctl daemon-reload
+#      sudo systemctl enable --now innovar
+#
+#  Os caminhos estão gravados porque este projeto tem um lugar só no servidor.
+#  Se um dia mudar, muda aqui e no nginx — e em nenhum outro lugar.
+# ==========================================================================
+Description=INNOVAR Engenharia e Equipamentos — site e loja
+Documentation=https://innovar.projetos.luizaugust.me
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=deploy
+Group=deploy
+WorkingDirectory=/var/www/projetos/Innovar-Engenharia
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=3
+
+# Escuta SÓ no loopback: quem fala com a internet é o nginx. Sem isto a porta
+# ficaria exposta direto, contornando TLS, limites e cabeçalhos do proxy.
+Environment=HOST=127.0.0.1
+Environment=PORT=5195
+Environment=NODE_ENV=production
+
+# --- contenção do processo -------------------------------------------------
+# Se um dia aparecer uma falha no app, isto limita o estrago: o serviço não
+# enxerga o resto do disco e não vira root.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictNamespaces=true
+LockPersonality=true
+
+# NÃO PONHA MemoryDenyWriteExecute AQUI. Ele proíbe o processo de tornar
+# executável uma página de memória que ele mesmo escreveu — e é exatamente
+# isso que o V8 faz para compilar JavaScript. O Node não avisa: derruba com
+# `status=5/TRAP` alguns segundos DEPOIS de subir, quando o compilador entra
+# em ação, o que faz parecer erro de rede ou de banco. Custou a primeira
+# subida de um projeto irmão.
+
+# A única pasta gravável é a do projeto: o banco SQLite, os backups e as fotos
+# enviadas pelo painel ficam dentro dela. `ProtectSystem=strict` deixa todo o
+# resto do disco somente-leitura para este serviço.
+ReadWritePaths=/var/www/projetos/Innovar-Engenharia
+
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=innovar
+
+[Install]
+WantedBy=multi-user.target
